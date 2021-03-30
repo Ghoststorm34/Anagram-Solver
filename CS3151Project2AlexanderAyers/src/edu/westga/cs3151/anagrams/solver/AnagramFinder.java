@@ -39,6 +39,7 @@ public class AnagramFinder {
 	 */
 	public ArrayList<ArrayList<String>> findAnagrams(String letters) {
 		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
+		HashSet<String> dictionaryForSolve = this.removeUnmatchedWords(letters);
 		/**
 		 * First as a separate private helper method, check if each word in the
 		 * dictionary is contained within letters. If not, remove word, if it is keep
@@ -50,12 +51,15 @@ public class AnagramFinder {
 		 * with word added to array list. Once letters is empty, add anagram to result.
 		 * If nothing is found, exit execution. Maintain current result as a parameter.
 		 */
-		this.removeUnmatchedWords(letters);
+		for (String word : dictionaryForSolve) {
+			System.out.println(word);
+		}
 		return result;
 	}
 
-	private void removeUnmatchedWords(String letters) {
+	private HashSet<String> removeUnmatchedWords(String letters) {
 		char[] lettersArray = letters.toCharArray();
+		HashSet<String> dictionaryForSolve = new HashSet<String>();
 		for (String word : this.dictionary) {
 			char[] wordArray = word.toCharArray();
 			boolean contained = false;
@@ -68,13 +72,14 @@ public class AnagramFinder {
 				}
 			}
 			if (!contained) {
-				this.dictionary.remove(word);
+				dictionaryForSolve.add(word);
 			}
 		}
+		return dictionaryForSolve;
 	}
-	
+
 	private void solveAnagram(ArrayList<ArrayList<String>> result) {
-		
+
 	}
 
 	private boolean contains(char item, char[] secondArray) {
