@@ -1,6 +1,9 @@
 package edu.westga.cs3151.anagrams.solver;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+
+import edu.westga.cs3151.anagrams.data.DictionaryReader;
 
 /**
  * The Class AnagramFinder
@@ -9,6 +12,9 @@ import java.util.ArrayList;
  * @version Spring 2021
  */
 public class AnagramFinder {
+
+	private DictionaryReader reader;
+	private HashSet<String> dictionary;
 
 	/**
 	 * Instantiates a new anagram finder
@@ -19,6 +25,9 @@ public class AnagramFinder {
 	 * @param filename the name of the dictionary file used by this anagram finder
 	 */
 	public AnagramFinder(String filename) {
+		this.reader = new DictionaryReader();
+		this.reader.readFile(filename);
+		this.dictionary = this.reader.getDictionary();
 	}
 
 	/**
@@ -41,7 +50,39 @@ public class AnagramFinder {
 		 * with word added to array list. Once letters is empty, add anagram to result.
 		 * If nothing is found, exit execution. Maintain current result as a parameter.
 		 */
+		this.removeUnmatchedWords(letters);
 		return result;
 	}
 
+	private void removeUnmatchedWords(String letters) {
+		char[] lettersArray = letters.toCharArray();
+		for (String word : this.dictionary) {
+			char[] wordArray = word.toCharArray();
+			boolean contained = false;
+			for (char currChar : wordArray) {
+				if (!this.contains(currChar, lettersArray)) {
+					contained = false;
+					break;
+				} else {
+					contained = true;
+				}
+			}
+			if (!contained) {
+				this.dictionary.remove(word);
+			}
+		}
+	}
+	
+	private void solveAnagram(ArrayList<ArrayList<String>> result) {
+		
+	}
+
+	private boolean contains(char item, char[] secondArray) {
+		for (char current : secondArray) {
+			if (item == current) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
