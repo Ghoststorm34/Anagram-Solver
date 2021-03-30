@@ -71,7 +71,7 @@ public class AnagramFinder {
 					contained = true;
 				}
 			}
-			if (!contained) {
+			if (contained) {
 				dictionaryForSolve.add(word);
 			}
 		}
