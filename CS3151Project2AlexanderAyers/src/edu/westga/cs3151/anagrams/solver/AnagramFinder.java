@@ -40,6 +40,7 @@ public class AnagramFinder {
 	public ArrayList<ArrayList<String>> findAnagrams(String letters) {
 		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 		HashSet<String> dictionaryForSolve = this.removeUnmatchedWords(letters);
+		char[] lettersArray = letters.toCharArray();
 		/**
 		 * First as a separate private helper method, check if each word in the
 		 * dictionary is contained within letters. If not, remove word, if it is keep
@@ -51,9 +52,7 @@ public class AnagramFinder {
 		 * with word added to array list. Once letters is empty, add anagram to result.
 		 * If nothing is found, exit execution. Maintain current result as a parameter.
 		 */
-		for (String word : dictionaryForSolve) {
-			System.out.println(word);
-		}
+		this.solveAnagram(result, dictionaryForSolve, lettersArray);
 		return result;
 	}
 
@@ -61,16 +60,7 @@ public class AnagramFinder {
 		char[] lettersArray = letters.toCharArray();
 		HashSet<String> dictionaryForSolve = new HashSet<String>();
 		for (String word : this.dictionary) {
-			char[] wordArray = word.toCharArray();
-			boolean contained = false;
-			for (char currChar : wordArray) {
-				if (!this.contains(currChar, lettersArray)) {
-					contained = false;
-					break;
-				} else {
-					contained = true;
-				}
-			}
+			boolean contained = this.containsLetters(word, lettersArray);
 			if (contained) {
 				dictionaryForSolve.add(word);
 			}
@@ -78,16 +68,40 @@ public class AnagramFinder {
 		return dictionaryForSolve;
 	}
 
-	private void solveAnagram(ArrayList<ArrayList<String>> result) {
-
+	private void solveAnagram(ArrayList<ArrayList<String>> result, HashSet<String> dictionary, char[] lettersArray) {
+		for (String word : dictionary) {
+			if (this.containsLetters(word, lettersArray)) {
+				// TODO Remove letters from word from letters array, could use the string of
+				// letters array.
+				// TODO Recursive Call
+				// TODO If/Else statement, if lettersArray.size() == empty, return, else add
+				// result to new phrase. Add the result to a new ArrayList.
+			}
+		}
 	}
 
-	private boolean contains(char item, char[] secondArray) {
-		for (char current : secondArray) {
+	private boolean contains(char item, char[] checkedArray) {
+		for (char current : checkedArray) {
 			if (item == current) {
 				return true;
 			}
 		}
 		return false;
+	}
+
+	private boolean containsLetters(String word, char[] letters) {
+		char[] wordArray = word.toCharArray();
+		boolean contained = false;
+
+		for (char currentChar : wordArray) {
+			if (this.contains(currentChar, letters)) {
+				contained = false;
+				break;
+			} else {
+				contained = true;
+			}
+		}
+
+		return contained;
 	}
 }
