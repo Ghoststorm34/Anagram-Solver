@@ -67,7 +67,11 @@ public class AnagramFinder {
 		}
 		return dictionaryForSolve;
 	}
-
+	
+	private void solve() {
+		
+	}
+	
 	private void solveAnagram(ArrayList<ArrayList<String>> result, HashSet<String> dictionary, char[] lettersArray) {
 		for (String word : dictionary) {
 			if (this.containsLetters(word, lettersArray)) {
@@ -87,6 +91,10 @@ public class AnagramFinder {
 			}
 		}
 		return false;
+	}
+	
+	private void removeLetters(char[] wordArray, char[] letterArray) {
+		
 	}
 
 	private boolean containsLetters(String word, char[] letters) {
