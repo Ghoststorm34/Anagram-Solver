@@ -40,48 +40,44 @@ public class AnagramFinder {
 	public ArrayList<ArrayList<String>> findAnagrams(String letters) {
 		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 		HashSet<String> dictionaryForSolve = this.removeUnmatchedWords(letters);
-		char[] lettersArray = letters.toCharArray();
-		/**
-		 * First as a separate private helper method, check if each word in the
-		 * dictionary is contained within letters. If not, remove word, if it is keep
-		 * it. Loop through using each string as a list of characters, if not all of the
-		 * characters from the dictionary word are found, remove it.
-		 * 
-		 * Secondly, make another private helper method that accepts parameter of
-		 * result. Loop through dictionary, on match use recursion to go through again
-		 * with word added to array list. Once letters is empty, add anagram to result.
-		 * If nothing is found, exit execution. Maintain current result as a parameter.
-		 */
-		this.solveAnagram(result, dictionaryForSolve, lettersArray);
+
+		this.solveAnagram(result, new ArrayList<String>(), letters, dictionaryForSolve);
 		return result;
 	}
 
-	private HashSet<String> removeUnmatchedWords(String letters) {
-		char[] lettersArray = letters.toCharArray();
-		HashSet<String> dictionaryForSolve = new HashSet<String>();
-		for (String word : this.dictionary) {
-			boolean contained = this.containsLetters(word, lettersArray);
-			if (contained) {
-				dictionaryForSolve.add(word);
+	private void solveAnagram(ArrayList<ArrayList<String>> result, ArrayList<String> currentWords, String phrase,
+			HashSet<String> dictionaryForSolve) {
+		for (String word : dictionaryForSolve) {
+			String newPhrase = this.preparePhraseForSolve(phrase, word);
+
+			if (this.isValidAnagram(phrase, word, newPhrase)) {
+				ArrayList<String> newPath = new ArrayList<String>(currentWords);
+				newPath.add(word);
+				this.solveAnagram(result, newPath, newPhrase, dictionaryForSolve);
 			}
 		}
-		return dictionaryForSolve;
-	}
-	
-	private void solve() {
-		
-	}
-	
-	private void solveAnagram(ArrayList<ArrayList<String>> result, HashSet<String> dictionary, char[] lettersArray) {
-		for (String word : dictionary) {
-			if (this.containsLetters(word, lettersArray)) {
-				// TODO Remove letters from word from letters array, could use the string of
-				// letters array.
-				// TODO Recursive Call
-				// TODO If/Else statement, if lettersArray.size() == empty, return, else add
-				// result to new phrase. Add the result to a new ArrayList.
-			}
+		if (this.recursionOver(currentWords, phrase)) {
+			result.add(currentWords);
 		}
+	}
+
+	private String preparePhraseForSolve(String phrase, String word) {
+		String tempPhrase = phrase;
+
+		for (int i = 0; i < word.length(); i++) {
+			char currLetter = word.charAt(i);
+			tempPhrase = tempPhrase.replaceFirst(currLetter + "", "");
+		}
+
+		return tempPhrase;
+	}
+
+	private boolean isValidAnagram(String phrase, String word, String newPhrase) {
+		return phrase.length() - newPhrase.length() == word.length();
+	}
+
+	private boolean recursionOver(ArrayList<String> currentWords, String phrase) {
+		return phrase.length() == 0 && !currentWords.isEmpty();
 	}
 
 	private boolean contains(char item, char[] checkedArray) {
@@ -92,24 +88,26 @@ public class AnagramFinder {
 		}
 		return false;
 	}
-	
-	private void removeLetters(char[] wordArray, char[] letterArray) {
-		
-	}
 
-	private boolean containsLetters(String word, char[] letters) {
-		char[] wordArray = word.toCharArray();
-		boolean contained = false;
 
-		for (char currentChar : wordArray) {
-			if (this.contains(currentChar, letters)) {
-				contained = false;
-				break;
-			} else {
-				contained = true;
+	private HashSet<String> removeUnmatchedWords(String letters) {
+		char[] lettersArray = letters.toCharArray();
+		HashSet<String> dictionaryForSolve = new HashSet<String>();
+		for (String word : this.dictionary) {
+			char[] wordArray = word.toCharArray();
+			boolean contained = false;
+			for (char currChar : wordArray) {
+				if (!this.contains(currChar, lettersArray)) {
+					contained = false;
+					break;
+				} else {
+					contained = true;
+				}
+				if (contained) {
+					dictionaryForSolve.add(word);
+				}
 			}
 		}
-
-		return contained;
+		return dictionaryForSolve;
 	}
 }
